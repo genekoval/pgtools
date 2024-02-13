@@ -86,7 +86,12 @@ impl Database {
             .arg("--file")
             .arg(path);
 
-        self.exec(command).await?;
+        self.exec(command).await.map_err(|err| {
+            format!(
+                "failed to create database dump at '{}': {err}",
+                path.display()
+            )
+        })?;
 
         Ok(())
     }
